@@ -14,7 +14,6 @@ def is_number(x):
         return False
         
 
-
 def end():
     pygame.quit()
     sys.exit()
@@ -22,7 +21,7 @@ def end():
 class Circle(pygame.Rect):
     def __init__(self, left: float, top: float, width: float, height: float, xratio, yratio) -> None:
         super().__init__(left, top, width, height)
-        self.speed   = -pi/2
+        self.time   = -pi/2
         self.yoffset = self.y + width /2
         self.xoffset = self.x + height/2
         self.x_ratio = xratio
@@ -44,14 +43,37 @@ def main():
     c_radius = SETTINGS["circle-radius"]
 
     WIDTH = SETTINGS["width"]
-    if WIDTH == "default":
-        WIDTH = screen_info.current_w
-
+    if type(WIDTH) == str:
+        if WIDTH.lower() == "height":
+            HEIGHT = SETTINGS["height"]
+            if type(HEIGHT) == str:
+                if HEIGHT.lower() == "fill":
+                    HEIGHT = screen_info.current_h
+                elif HEIGHT.lower() == "width":
+                    raise BaseException("No, you can't do that")
+            elif is_number(HEIGHT):
+                HEIGHT = float(HEIGHT)
+            WIDTH = HEIGHT
+        
+        elif WIDTH.lower() == "fill":
+            WIDTH = screen_info.current_w
+    
+    elif is_number(WIDTH):
+        WIDTH = float(WIDTH)
+    
     HEIGHT = SETTINGS["height"]
-    if HEIGHT == "default":
-        HEIGHT = screen_info.current_h
+    if type(HEIGHT) == str:
+        if HEIGHT.lower() == "fill":
+            HEIGHT = screen_info.current_h
+        elif HEIGHT.lower() == "width":
+            HEIGHT = WIDTH
+    
+    elif is_number(HEIGHT):
+        HEIGHT = float(HEIGHT)
+    
 
     HW, HH = WIDTH//2, HEIGHT//2
+    tau = 2*pi
     
     speed = SETTINGS["speed"]
 
@@ -66,6 +88,9 @@ def main():
     center = (HW-c_radius, HH-c_radius)
 
     n_circles = SETTINGS["number-of-circles"]
+    if not n_circles:
+        raise BaseException("serieously, what's the point of not having any circles?")
+    
     circles: list[Circle] = []
     angle_between_circles = SETTINGS["angle-between-circles"]
     if angle_between_circles == "default":
@@ -81,7 +106,7 @@ def main():
         xratio = sin(angle) * moving
         yratio = cos(angle) * moving
         circle = Circle(*center, c_diameter, c_diameter, xratio, yratio)
-        circle.speed -= angle
+        circle.time -= angle
         circles.append(circle)
 
     clock = pygame.time.Clock()
@@ -99,21 +124,23 @@ def main():
         
         dt = clock.get_time() / 1000
         
-        screen.fill("#161716")
+        screen.fill("#181a16")
         pygame.display.set_caption(f"fps: {clock.get_fps():.2f}")
         
-        s = dt * speed
+        time = dt * speed
         
         for circle in circles:
-            pygame.draw.ellipse(screen, "#ffffff", circle)
-            circle.centerx = sin(circle.speed) * circle.x_ratio + circle.xoffset
-            circle.centery = sin(circle.speed) * circle.y_ratio + circle.yoffset
-            circle.speed += s
-        
-        print(f"\r{circle.speed}", end="")
+            pygame.draw.ellipse(screen, "#dcdeda", circle)
+            sin_time = sin(circle.time)
+            circle.centerx = sin_time * circle.x_ratio + circle.xoffset
+            circle.centery = sin_time * circle.y_ratio + circle.yoffset
+            circle.time += time
+            if circle.time >= tau:
+                circle.time = circle.time % tau
         
         pygame.display.flip()
         clock.tick(TARGET_FPS)
+        
 
 
 if __name__ == "__main__":
