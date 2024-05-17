@@ -4,6 +4,17 @@ import json
 from math import sin, cos, pi, radians
 
 
+def is_number(x):
+    if type(x) == bool:
+        return False
+    try:
+        float(x)
+        return True
+    except ValueError:
+        return False
+        
+
+
 def end():
     pygame.quit()
     sys.exit()
@@ -23,6 +34,13 @@ def main():
     screen_info = pygame.display.Info()
     
     SETTINGS = json.load(open("settings.json"))
+    
+    TARGET_FPS = SETTINGS["fps"]
+    if not is_number(TARGET_FPS):
+        raise ValueError(f"\"fps\" must be a number not \"{TARGET_FPS}\" of type {type(TARGET_FPS)}")
+    else:
+        TARGET_FPS = float(TARGET_FPS)
+    
     c_radius = SETTINGS["circle-radius"]
 
     WIDTH = SETTINGS["width"]
@@ -52,10 +70,10 @@ def main():
     angle_between_circles = SETTINGS["angle-between-circles"]
     if angle_between_circles == "default":
         angle_between_circles = pi/n_circles
-    elif type(angle_between_circles) == str or type(angle_between_circles) == bool:
+    elif not is_number(angle_between_circles):
         raise ValueError(f"\"angle-between-circles\" must be set to \"default\" or a number not \"{angle_between_circles}\" of type {type(angle_between_circles)}")
     else:
-        angle_between_circles = radians(angle_between_circles)
+        angle_between_circles = radians(float(angle_between_circles))
     
     
     for i in range(n_circles):
@@ -95,7 +113,7 @@ def main():
         print(f"\r{circle.speed}", end="")
         
         pygame.display.flip()
-        clock.tick(360)
+        clock.tick(TARGET_FPS)
 
 
 if __name__ == "__main__":
