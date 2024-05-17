@@ -1,0 +1,9 @@
+{
+    "number-of-circles": 6,
+    "circle-radius": 69,
+    "big-circle-radius": "fit",
+    "angle-between-circles": "default",
+    "width": "default",
+    "height": "default",
+    "speed": 2
+}
