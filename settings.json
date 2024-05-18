@@ -6,5 +6,7 @@
     "angle-between-circles": "default",
     "width": "height",
     "height": "fill",
-    "speed": 2
+    "speed": 2,
+    "bg-color": "#181a16",
+    "circle-color": "#dcdeda"
 }

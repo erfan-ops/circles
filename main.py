@@ -76,6 +76,9 @@ def main():
     tau = 2*pi
     
     speed = SETTINGS["speed"]
+    
+    bg_color = SETTINGS["bg-color"]
+    circle_color = SETTINGS["circle-color"]
 
     move_radius = SETTINGS["big-circle-radius"]
     if move_radius == "fit":
@@ -124,13 +127,13 @@ def main():
         
         dt = clock.get_time() / 1000
         
-        screen.fill("#181a16")
+        screen.fill(bg_color)
         pygame.display.set_caption(f"fps: {clock.get_fps():.2f}")
         
         time = dt * speed
         
         for circle in circles:
-            pygame.draw.ellipse(screen, "#dcdeda", circle)
+            pygame.draw.ellipse(screen, circle_color, circle)
             sin_time = sin(circle.time)
             circle.centerx = sin_time * circle.x_ratio + circle.xoffset
             circle.centery = sin_time * circle.y_ratio + circle.yoffset
