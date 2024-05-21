@@ -2,8 +2,6 @@ import pygame
 import sys
 import json
 from math import sin, cos, radians, pi
-import ctypes
-from ctypes import wintypes
 
 
 def is_number(x):
@@ -82,11 +80,14 @@ def main():
     bg_color = SETTINGS["bg-color"]
     circle_color = SETTINGS["circle-color"]
 
+    big_circle_width = SETTINGS["big-circle-width"]
     move_radius = SETTINGS["big-circle-radius"]
     if move_radius == "fit":
         move_radius = min(WIDTH, HEIGHT)
     elif move_radius == "fill":
         move_radius = max(WIDTH, HEIGHT)
+    
+    move_radius -= big_circle_width*2
     
     c_diameter = 2 * c_radius
     moving = move_radius/2 - c_radius
@@ -132,6 +133,10 @@ def main():
         
         screen.fill(bg_color)
         pygame.display.set_caption(f"fps: {clock.get_fps():.2f}")
+        
+        pygame.draw.ellipse(screen, (90, 24, 10), (0, 0, WIDTH, HEIGHT))
+        if big_circle_width:
+            pygame.draw.circle(screen, "#0b0d09", (HW, HH), HW, big_circle_width)
         
         time = dt * speed
         

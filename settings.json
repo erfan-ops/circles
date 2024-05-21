@@ -3,6 +3,7 @@
     "number-of-circles": 4,
     "circle-radius": 69,
     "big-circle-radius": "fit",
+    "big-circle-width": 10,
     "angle-between-circles": "default",
     "width": "height",
     "height": "fill",
