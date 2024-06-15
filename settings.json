@@ -1,7 +1,7 @@
 {
     "fps": 360,
-    "number-of-circles": 4,
-    "circle-radius": 69,
+    "number-of-circles": 3,
+    "circle-radius": 130,
     "big-circle-radius": "fit",
     "big-circle-width": 10,
     "angle-between-circles": "default",
